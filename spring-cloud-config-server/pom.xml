@@ -3,10 +3,8 @@
 		 xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>spring-cloud-config-server</artifactId>
 	<packaging>jar</packaging>
-
 	<name>spring-cloud-config-server</name>
 	<description>spring-cloud-config-server</description>
 
@@ -80,9 +78,9 @@
 			<artifactId>snakeyaml</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.fasterxml.jackson.dataformat</groupId>
-		    <artifactId>jackson-dataformat-yaml</artifactId>
-		</dependency>		
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.tmatesoft.svnkit</groupId>
 			<artifactId>svnkit</artifactId>
@@ -148,9 +146,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>org.springframework.cloud.config.server.ConfigServerApplication
-		</start-class>
+		<start-class>org.springframework.cloud.config.server.ConfigServerApplication</start-class>
 	</properties>
+
 	<build>
 		<plugins>
 			<plugin>

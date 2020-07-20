@@ -1,19 +1,3 @@
-/*
- * Copyright 2013-2020 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.cloud.config.server.support;
 
 import java.io.IOException;
@@ -39,6 +23,7 @@ public abstract class PathUtils {
 
 	/**
 	 * Check whether the given location contains invalid escape sequences.
+	 *
 	 * @param location the location to validate
 	 * @return {@code true} if the path is invalid, {@code false} otherwise
 	 */
@@ -58,8 +43,7 @@ public abstract class PathUtils {
 				if (isInvalidLocation(decodedPath)) {
 					return true;
 				}
-			}
-			catch (IllegalArgumentException | UnsupportedEncodingException ex) {
+			} catch (IllegalArgumentException | UnsupportedEncodingException ex) {
 				// Should never happen...
 			}
 		}
@@ -84,6 +68,7 @@ public abstract class PathUtils {
 
 	/**
 	 * Check whether the given path contains invalid escape sequences.
+	 *
 	 * @param path the path to validate
 	 * @return {@code true} if the path is invalid, {@code false} otherwise
 	 */
@@ -100,8 +85,7 @@ public abstract class PathUtils {
 				if (isInvalidPath(decodedPath)) {
 					return true;
 				}
-			}
-			catch (IllegalArgumentException | UnsupportedEncodingException ex) {
+			} catch (IllegalArgumentException | UnsupportedEncodingException ex) {
 				// Should never happen...
 			}
 		}
@@ -118,6 +102,7 @@ public abstract class PathUtils {
 	 * <li>Any combination of leading slash and control characters (00-1F and 7F) with a
 	 * single "/" or "". For example {@code "  / // foo/bar"} becomes {@code "/foo/bar"}.
 	 * </ul>
+	 *
 	 * @param path path to process
 	 * @return the processed path
 	 * @since 3.2.12
@@ -143,8 +128,7 @@ public abstract class PathUtils {
 				if (sb != null) {
 					sb.append(path.charAt(i));
 				}
-			}
-			finally {
+			} finally {
 				prev = curr;
 			}
 		}
@@ -156,8 +140,7 @@ public abstract class PathUtils {
 		for (int i = 0; i < path.length(); i++) {
 			if (path.charAt(i) == '/') {
 				slash = true;
-			}
-			else if (path.charAt(i) > ' ' && path.charAt(i) != 127) {
+			} else if (path.charAt(i) > ' ' && path.charAt(i) != 127) {
 				if (i == 0 || (i == 1 && slash)) {
 					return path;
 				}
@@ -179,6 +162,7 @@ public abstract class PathUtils {
 	 * <strong>Note:</strong> this method assumes that leading, duplicate '/' or control
 	 * characters (e.g. white space) have been trimmed so that the path starts predictably
 	 * with a single '/' or does not have one.
+	 *
 	 * @param path the path to validate
 	 * @return {@code true} if the path is invalid, {@code false} otherwise
 	 * @since 3.0.6
@@ -195,7 +179,7 @@ public abstract class PathUtils {
 			if (ResourceUtils.isUrl(relativePath) || relativePath.startsWith("url:")) {
 				if (logger.isWarnEnabled()) {
 					logger.warn(
-							"Path represents URL or has \"url:\" prefix: [" + path + "]");
+						"Path represents URL or has \"url:\" prefix: [" + path + "]");
 				}
 				return true;
 			}
@@ -203,7 +187,7 @@ public abstract class PathUtils {
 		if (path.contains("..") && StringUtils.cleanPath(path).contains("../")) {
 			if (logger.isWarnEnabled()) {
 				logger.warn("Path contains \"../\" after call to StringUtils#cleanPath: ["
-						+ path + "]");
+					+ path + "]");
 			}
 			return true;
 		}
@@ -215,15 +199,16 @@ public abstract class PathUtils {
 	 * resources exists and is readable. The default implementation also verifies the
 	 * resource is either under the location relative to which it was found or is under
 	 * one of the {@link #setAllowedLocations allowed locations}.
-	 * @param resource the resource to check
-	 * @param location the location relative to which the resource was found
+	 *
+	 * @param resource         the resource to check
+	 * @param location         the location relative to which the resource was found
 	 * @param allowedLocations set of allowed locations
 	 * @return "true" if resource is in a valid location, "false" otherwise.
 	 * @throws IOException if Resource URLS fail to parse.
 	 * @since 4.1.2
 	 */
 	public static boolean checkResource(Resource resource, Resource location,
-			List<Resource> allowedLocations) throws IOException {
+										List<Resource> allowedLocations) throws IOException {
 		if (isResourceUnderLocation(resource, location)) {
 			return true;
 		}
@@ -236,17 +221,17 @@ public abstract class PathUtils {
 		}
 		if (logger.isWarnEnabled()) {
 			logger.warn("Resource path \"" + location.getURI()
-					+ "\" was successfully resolved " + "but resource \""
-					+ resource.getURL() + "\" is neither under the "
-					+ "current location \"" + location.getURL()
-					+ "\" nor under any of the " + "allowed locations "
-					+ (allowedLocations != null ? allowedLocations : "[]"));
+				+ "\" was successfully resolved " + "but resource \""
+				+ resource.getURL() + "\" is neither under the "
+				+ "current location \"" + location.getURL()
+				+ "\" nor under any of the " + "allowed locations "
+				+ (allowedLocations != null ? allowedLocations : "[]"));
 		}
 		return false;
 	}
 
 	private static boolean isResourceUnderLocation(Resource resource, Resource location)
-			throws IOException {
+		throws IOException {
 		if (resource.getClass() != location.getClass()) {
 			return false;
 		}
@@ -257,13 +242,11 @@ public abstract class PathUtils {
 		if (resource instanceof UrlResource) {
 			resourcePath = resource.getURL().toExternalForm();
 			locationPath = StringUtils.cleanPath(location.getURL().toString());
-		}
-		else if (resource instanceof ClassPathResource) {
+		} else if (resource instanceof ClassPathResource) {
 			resourcePath = ((ClassPathResource) resource).getPath();
 			locationPath = StringUtils
-					.cleanPath(((ClassPathResource) location).getPath());
-		}
-		else {
+				.cleanPath(((ClassPathResource) location).getPath());
+		} else {
 			resourcePath = resource.getURL().getPath();
 			locationPath = StringUtils.cleanPath(location.getURL().getPath());
 		}
@@ -272,9 +255,8 @@ public abstract class PathUtils {
 			return true;
 		}
 		locationPath = (locationPath.endsWith("/") || locationPath.isEmpty()
-				? locationPath : locationPath + "/");
+			? locationPath : locationPath + "/");
 		return (resourcePath.startsWith(locationPath)
-				&& !isInvalidEncodedPath(resourcePath));
+			&& !isInvalidEncodedPath(resourcePath));
 	}
-
 }
