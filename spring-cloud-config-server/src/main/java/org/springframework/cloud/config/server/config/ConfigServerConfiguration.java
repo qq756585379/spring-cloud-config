@@ -19,9 +19,6 @@ package org.springframework.cloud.config.server.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author Spencer Gibb
- */
 @Configuration(proxyBeanMethods = false)
 public class ConfigServerConfiguration {
 
@@ -33,5 +30,4 @@ public class ConfigServerConfiguration {
 	class Marker {
 
 	}
-
 }

@@ -19,9 +19,6 @@ package org.springframework.cloud.config.server.environment;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.config.server.support.EnvironmentRepositoryProperties;
 
-/**
- * @author Clay McCoy
- */
 @ConfigurationProperties("spring.cloud.config.server.awss3")
 public class AwsS3EnvironmentProperties implements EnvironmentRepositoryProperties {
 
@@ -74,5 +71,4 @@ public class AwsS3EnvironmentProperties implements EnvironmentRepositoryProperti
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
 }

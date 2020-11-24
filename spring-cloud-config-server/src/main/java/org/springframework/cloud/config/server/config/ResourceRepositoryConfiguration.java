@@ -24,10 +24,6 @@ import org.springframework.cloud.config.server.resource.ResourceRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author Dave Syer
- * @author Tim Ysewyn
- */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(ResourceRepository.class)
 public class ResourceRepositoryConfiguration {
@@ -37,5 +33,4 @@ public class ResourceRepositoryConfiguration {
 	public ResourceRepository resourceRepository(SearchPathLocator service) {
 		return new GenericResourceRepository(service);
 	}
-
 }

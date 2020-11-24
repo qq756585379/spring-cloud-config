@@ -42,25 +42,13 @@ import org.springframework.security.rsa.crypto.RsaAlgorithm;
 import org.springframework.security.rsa.crypto.RsaSecretEncryptor;
 import org.springframework.util.StringUtils;
 
-/**
- * Auto configuration for text encryptors and environment encryptors (non-web stuff).
- * Users can provide beans of the same type as any or all of the beans defined here in
- * application code to override the default behaviour.
- *
- * @author Bartosz Wojtkiewicz
- * @author Rafal Zukowski
- * @author Dave Syer
- *
- */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(KeyProperties.class)
-@Import({ SingleTextEncryptorConfiguration.class,
-		DefaultTextEncryptorConfiguration.class })
+@Import({SingleTextEncryptorConfiguration.class, DefaultTextEncryptorConfiguration.class})
 public class EncryptionAutoConfiguration {
 
 	@Configuration(proxyBeanMethods = false)
-	@ConditionalOnProperty(value = "spring.cloud.config.server.encrypt.enabled",
-			matchIfMissing = true)
+	@ConditionalOnProperty(value = "spring.cloud.config.server.encrypt.enabled", matchIfMissing = true)
 	protected static class EncryptorConfiguration {
 
 		@Autowired(required = false)
@@ -78,13 +66,11 @@ public class EncryptionAutoConfiguration {
 			}
 			return new CipherEnvironmentEncryptor(locator);
 		}
-
 	}
 
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(RsaSecretEncryptor.class)
-	@ConditionalOnProperty(prefix = "encrypt.key-store", value = "location",
-			matchIfMissing = false)
+	@ConditionalOnProperty(prefix = "encrypt.key-store", value = "location", matchIfMissing = false)
 	protected static class KeyStoreConfiguration {
 
 		@Autowired
@@ -98,10 +84,10 @@ public class EncryptionAutoConfiguration {
 		public TextEncryptorLocator textEncryptorLocator() {
 			KeyStore keyStore = this.key.getKeyStore();
 			KeyStoreTextEncryptorLocator locator = new KeyStoreTextEncryptorLocator(
-					new KeyStoreKeyFactory(keyStore.getLocation(),
-							keyStore.getPassword().toCharArray(),
-							key.getKeyStore().getType()),
-					keyStore.getSecret(), keyStore.getAlias());
+				new KeyStoreKeyFactory(keyStore.getLocation(),
+					keyStore.getPassword().toCharArray(),
+					key.getKeyStore().getType()),
+				keyStore.getSecret(), keyStore.getAlias());
 			RsaAlgorithm algorithm = this.rsaProperties.getAlgorithm();
 			locator.setRsaAlgorithm(algorithm);
 			locator.setSalt(this.rsaProperties.getSalt());
@@ -148,5 +134,4 @@ class DefaultTextEncryptorConfiguration {
 		}
 		return Encryptors.noOpText();
 	}
-
 }

@@ -30,9 +30,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-/**
- * @author Ryan Baxter
- */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(CompositeEnvironmentRepository.class)
 public class CompositeConfiguration {
@@ -57,5 +54,4 @@ public class CompositeConfiguration {
 	public void setEnvironmentRepos(List<EnvironmentRepository> repos) {
 		this.environmentRepos = repos;
 	}
-
 }

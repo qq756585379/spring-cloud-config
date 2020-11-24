@@ -24,19 +24,12 @@ import org.springframework.cloud.config.server.support.GoogleCloudSourceSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Adds Google Cloud Source OAuth2 support, if
- * com.google.auth:google-auth-library-oauth2-http library is on classpath.
- *
- * @author Eduard Wirch
- */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({ GoogleCredentials.class, TransportConfigCallback.class })
+@ConditionalOnClass({GoogleCredentials.class, TransportConfigCallback.class})
 public class GoogleCloudSourceConfiguration {
 
 	@Bean
 	public GoogleCloudSourceSupport createGoogleCloudSourceSupport() {
 		return new GoogleCloudSourceSupport();
 	}
-
 }

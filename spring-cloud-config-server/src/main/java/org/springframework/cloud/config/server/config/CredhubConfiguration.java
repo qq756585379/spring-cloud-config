@@ -23,9 +23,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.credhub.core.CredHubProperties;
 import org.springframework.credhub.support.ClientOptions;
 
-/**
- * @author Alberto C. Ríos
- */
 @Configuration(proxyBeanMethods = false)
 @Profile("credhub")
 public class CredhubConfiguration {
@@ -41,5 +38,4 @@ public class CredhubConfiguration {
 	public ClientOptions clientOptions() {
 		return new ClientOptions();
 	}
-
 }

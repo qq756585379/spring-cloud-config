@@ -36,9 +36,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.vault.core.VaultTemplate;
 
-/**
- * @author Scott Frederick
- */
 @Configuration(proxyBeanMethods = false)
 public class VaultConfiguration {
 
@@ -108,7 +105,5 @@ public class VaultConfiguration {
 		public TokenClientAuthenticationProvider tokenClientAuthenticationProvider() {
 			return new TokenClientAuthenticationProvider();
 		}
-
 	}
-
 }

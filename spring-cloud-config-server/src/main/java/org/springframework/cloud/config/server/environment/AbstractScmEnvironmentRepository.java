@@ -22,12 +22,7 @@ import org.springframework.cloud.config.server.support.AbstractScmAccessorProper
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-/**
- * @author Dave Syer
- *
- */
-public abstract class AbstractScmEnvironmentRepository extends AbstractScmAccessor
-		implements EnvironmentRepository, SearchPathLocator, Ordered {
+public abstract class AbstractScmEnvironmentRepository extends AbstractScmAccessor implements EnvironmentRepository, SearchPathLocator, Ordered {
 
 	private EnvironmentCleaner cleaner = new EnvironmentCleaner();
 
@@ -37,30 +32,25 @@ public abstract class AbstractScmEnvironmentRepository extends AbstractScmAccess
 		super(environment);
 	}
 
-	public AbstractScmEnvironmentRepository(ConfigurableEnvironment environment,
-			AbstractScmAccessorProperties properties) {
+	public AbstractScmEnvironmentRepository(ConfigurableEnvironment environment, AbstractScmAccessorProperties properties) {
 		super(environment, properties);
 		this.order = properties.getOrder();
 	}
 
 	@Override
-	public synchronized Environment findOne(String application, String profile,
-			String label) {
+	public synchronized Environment findOne(String application, String profile, String label) {
 		return findOne(application, profile, label, false);
 	}
 
 	@Override
-	public synchronized Environment findOne(String application, String profile,
-			String label, boolean includeOrigin) {
-		NativeEnvironmentRepository delegate = new NativeEnvironmentRepository(
-				getEnvironment(), new NativeEnvironmentProperties());
+	public synchronized Environment findOne(String application, String profile, String label, boolean includeOrigin) {
+		NativeEnvironmentRepository delegate = new NativeEnvironmentRepository(getEnvironment(), new NativeEnvironmentProperties());
 		Locations locations = getLocations(application, profile, label);
 		delegate.setSearchLocations(locations.getLocations());
 		Environment result = delegate.findOne(application, profile, "", includeOrigin);
 		result.setVersion(locations.getVersion());
 		result.setLabel(label);
-		return this.cleaner.clean(result, getWorkingDirectory().toURI().toString(),
-				getUri());
+		return this.cleaner.clean(result, getWorkingDirectory().toURI().toString(), getUri());
 	}
 
 	@Override
@@ -71,5 +61,4 @@ public abstract class AbstractScmEnvironmentRepository extends AbstractScmAccess
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
 }

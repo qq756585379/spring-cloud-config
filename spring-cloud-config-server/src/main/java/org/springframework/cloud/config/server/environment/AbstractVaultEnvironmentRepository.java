@@ -35,15 +35,7 @@ import org.springframework.util.StringUtils;
 
 import static org.springframework.cloud.config.client.ConfigClientProperties.STATE_HEADER;
 
-/**
- * @author Spencer Gibb
- * @author Mark Paluch
- * @author Haroun Pacquee
- * @author Haytham Mohamed
- * @author Scott Frederick
- */
-public abstract class AbstractVaultEnvironmentRepository
-		implements EnvironmentRepository, Ordered {
+public abstract class AbstractVaultEnvironmentRepository implements EnvironmentRepository, Ordered {
 
 	// TODO: move to watchState:String on findOne?
 	protected final ObjectProvider<HttpServletRequest> request;
@@ -64,8 +56,7 @@ public abstract class AbstractVaultEnvironmentRepository
 
 	protected int order;
 
-	public AbstractVaultEnvironmentRepository(ObjectProvider<HttpServletRequest> request,
-			EnvironmentWatch watch, VaultEnvironmentProperties properties) {
+	public AbstractVaultEnvironmentRepository(ObjectProvider<HttpServletRequest> request, EnvironmentWatch watch, VaultEnvironmentProperties properties) {
 		this.defaultKey = properties.getDefaultKey();
 		this.profileSeparator = properties.getProfileSeparator();
 		this.order = properties.getOrder();
@@ -80,8 +71,7 @@ public abstract class AbstractVaultEnvironmentRepository
 
 		List<String> keys = findKeys(application, scrubbedProfiles);
 
-		Environment environment = new Environment(application, profiles, label, null,
-				getWatchState());
+		Environment environment = new Environment(application, profiles, label, null, getWatchState());
 
 		for (String key : keys) {
 			// read raw 'data' key from vault
@@ -115,8 +105,7 @@ public abstract class AbstractVaultEnvironmentRepository
 	private List<String> findKeys(String application, List<String> profiles) {
 		List<String> keys = new ArrayList<>();
 
-		if (StringUtils.hasText(this.defaultKey)
-				&& !this.defaultKey.equals(application)) {
+		if (StringUtils.hasText(this.defaultKey) && !this.defaultKey.equals(application)) {
 			keys.add(this.defaultKey);
 			addProfiles(keys, this.defaultKey, profiles);
 		}
@@ -138,8 +127,7 @@ public abstract class AbstractVaultEnvironmentRepository
 		return scrubbedProfiles;
 	}
 
-	private void addProfiles(List<String> contexts, String baseContext,
-			List<String> profiles) {
+	private void addProfiles(List<String> contexts, String baseContext, List<String> profiles) {
 		for (String profile : profiles) {
 			contexts.add(baseContext + this.profileSeparator + profile);
 		}
@@ -161,5 +149,4 @@ public abstract class AbstractVaultEnvironmentRepository
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
 }

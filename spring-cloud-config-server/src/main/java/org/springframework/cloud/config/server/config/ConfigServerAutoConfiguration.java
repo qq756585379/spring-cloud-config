@@ -21,15 +21,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-/**
- * @author Spencer Gibb
- */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnBean(ConfigServerConfiguration.Marker.class)
 @EnableConfigurationProperties(ConfigServerProperties.class)
-@Import({ EnvironmentRepositoryConfiguration.class, CompositeConfiguration.class,
-		ResourceRepositoryConfiguration.class, ConfigServerEncryptionConfiguration.class,
-		ConfigServerMvcConfiguration.class, ResourceEncryptorConfiguration.class })
+@Import({EnvironmentRepositoryConfiguration.class, CompositeConfiguration.class,
+	ResourceRepositoryConfiguration.class, ConfigServerEncryptionConfiguration.class,
+	ConfigServerMvcConfiguration.class, ResourceEncryptorConfiguration.class})
 public class ConfigServerAutoConfiguration {
 
 }

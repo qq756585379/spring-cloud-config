@@ -35,19 +35,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.util.StringUtils;
 
-/**
- * An {@link EnvironmentRepository} that picks up data from a relational database. The
- * database should have a table called "PROPERTIES" with columns "APPLICATION", "PROFILE",
- * "LABEL" (with the usual {@link Environment} meaning), plus "KEY" and "VALUE" for the
- * key and value pairs in {@link Properties} style. Property values behave in the same way
- * as they would if they came from Spring Boot properties files named
- * <code>{application}-{profile}.properties</code>, including all the encryption and
- * decryption, which will be applied as post-processing steps (i.e. not in this repository
- * directly).
- *
- * @author Dave Syer
- *
- */
 public class JdbcEnvironmentRepository implements EnvironmentRepository, Ordered {
 
 	private final JdbcTemplate jdbc;
@@ -58,8 +45,7 @@ public class JdbcEnvironmentRepository implements EnvironmentRepository, Ordered
 
 	private String sql;
 
-	public JdbcEnvironmentRepository(JdbcTemplate jdbc,
-			JdbcEnvironmentProperties properties) {
+	public JdbcEnvironmentRepository(JdbcTemplate jdbc, JdbcEnvironmentProperties properties) {
 		this.jdbc = jdbc;
 		this.order = properties.getOrder();
 		this.sql = properties.getSql();
@@ -87,20 +73,17 @@ public class JdbcEnvironmentRepository implements EnvironmentRepository, Ordered
 		}
 		String[] profiles = StringUtils.commaDelimitedListToStringArray(profile);
 		Environment environment = new Environment(application, profiles, label, null,
-				null);
+			null);
 		if (!config.startsWith("application")) {
 			config = "application," + config;
 		}
-		List<String> applications = new ArrayList<String>(new LinkedHashSet<>(
-				Arrays.asList(StringUtils.commaDelimitedListToStringArray(config))));
-		List<String> envs = new ArrayList<String>(
-				new LinkedHashSet<>(Arrays.asList(profiles)));
+		List<String> applications = new ArrayList<String>(new LinkedHashSet<>(Arrays.asList(StringUtils.commaDelimitedListToStringArray(config))));
+		List<String> envs = new ArrayList<String>(new LinkedHashSet<>(Arrays.asList(profiles)));
 		Collections.reverse(applications);
 		Collections.reverse(envs);
 		for (String app : applications) {
 			for (String env : envs) {
-				Map<String, String> next = (Map<String, String>) this.jdbc.query(this.sql,
-						new Object[] { app, env, label }, this.extractor);
+				Map<String, String> next = (Map<String, String>) this.jdbc.query(this.sql, new Object[]{app, env, label}, this.extractor);
 				if (!next.isEmpty()) {
 					environment.add(new PropertySource(app + "-" + env, next));
 				}
@@ -117,19 +100,17 @@ public class JdbcEnvironmentRepository implements EnvironmentRepository, Ordered
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
 }
 
 class PropertiesResultSetExtractor implements ResultSetExtractor<Map<String, String>> {
 
 	@Override
 	public Map<String, String> extractData(ResultSet rs)
-			throws SQLException, DataAccessException {
+		throws SQLException, DataAccessException {
 		Map<String, String> map = new LinkedHashMap<>();
 		while (rs.next()) {
 			map.put(rs.getString(1), rs.getString(2));
 		}
 		return map;
 	}
-
 }

@@ -42,11 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author Dave Syer
- * @author Tim Ysewyn
- *
- */
 @RestController
 @RequestMapping(path = "${spring.cloud.config.server.prefix:}")
 public class EncryptionController {
@@ -89,41 +84,35 @@ public class EncryptionController {
 
 	@RequestMapping(value = "encrypt/status", method = RequestMethod.GET)
 	public Map<String, Object> status() {
-		TextEncryptor encryptor = getEncryptor(defaultApplicationName, defaultProfile,
-				"");
+		TextEncryptor encryptor = getEncryptor(defaultApplicationName, defaultProfile, "");
 		validateEncryptionWeakness(encryptor);
 		return Collections.singletonMap("status", "OK");
 	}
 
 	@RequestMapping(value = "encrypt", method = RequestMethod.POST)
-	public String encrypt(@RequestBody String data,
-			@RequestHeader("Content-Type") MediaType type) {
+	public String encrypt(@RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
 		return encrypt(defaultApplicationName, defaultProfile, data, type);
 	}
 
 	@RequestMapping(value = "/encrypt/{name}/{profiles}", method = RequestMethod.POST)
-	public String encrypt(@PathVariable String name, @PathVariable String profiles,
-			@RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
+	public String encrypt(@PathVariable String name, @PathVariable String profiles, @RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
 		TextEncryptor encryptor = getEncryptor(name, profiles, "");
 		validateEncryptionWeakness(encryptor);
 		String input = stripFormData(data, type, false);
 		Map<String, String> keys = helper.getEncryptorKeys(name, profiles, input);
 		String textToEncrypt = helper.stripPrefix(input);
-		String encrypted = helper.addPrefix(keys,
-				encryptorLocator.locate(keys).encrypt(textToEncrypt));
+		String encrypted = helper.addPrefix(keys, encryptorLocator.locate(keys).encrypt(textToEncrypt));
 		logger.info("Encrypted data");
 		return encrypted;
 	}
 
 	@RequestMapping(value = "decrypt", method = RequestMethod.POST)
-	public String decrypt(@RequestBody String data,
-			@RequestHeader("Content-Type") MediaType type) {
+	public String decrypt(@RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
 		return decrypt(defaultApplicationName, defaultProfile, data, type);
 	}
 
 	@RequestMapping(value = "/decrypt/{name}/{profiles}", method = RequestMethod.POST)
-	public String decrypt(@PathVariable String name, @PathVariable String profiles,
-			@RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
+	public String decrypt(@PathVariable String name, @PathVariable String profiles, @RequestBody String data, @RequestHeader("Content-Type") MediaType type) {
 		TextEncryptor encryptor = getEncryptor(name, profiles, "");
 		checkDecryptionPossible(encryptor);
 		validateEncryptionWeakness(encryptor);
@@ -133,8 +122,7 @@ public class EncryptionController {
 			String decrypted = encryptor.decrypt(input);
 			logger.info("Decrypted cipher data");
 			return decrypted;
-		}
-		catch (IllegalArgumentException | IllegalStateException e) {
+		} catch (IllegalArgumentException | IllegalStateException e) {
 			logger.error("Cannot decrypt key:" + name + ", value:" + data, e);
 			throw new InvalidCipherException();
 		}
@@ -144,8 +132,7 @@ public class EncryptionController {
 		if (encryptorLocator == null) {
 			throw new KeyNotInstalledException();
 		}
-		TextEncryptor encryptor = encryptorLocator
-				.locate(helper.getEncryptorKeys(name, profiles, data));
+		TextEncryptor encryptor = encryptorLocator.locate(helper.getEncryptorKeys(name, profiles, data));
 		if (encryptor == null) {
 			throw new KeyNotInstalledException();
 		}
@@ -159,22 +146,19 @@ public class EncryptionController {
 	}
 
 	private void checkDecryptionPossible(TextEncryptor textEncryptor) {
-		if (textEncryptor instanceof RsaSecretEncryptor
-				&& !((RsaSecretEncryptor) textEncryptor).canDecrypt()) {
+		if (textEncryptor instanceof RsaSecretEncryptor && !((RsaSecretEncryptor) textEncryptor).canDecrypt()) {
 			throw new DecryptionNotSupportedException();
 		}
 	}
 
 	private String stripFormData(String data, MediaType type, boolean cipher) {
-
 		if (data.endsWith("=") && !type.equals(MediaType.TEXT_PLAIN)) {
 			try {
 				data = URLDecoder.decode(data, "UTF-8");
 				if (cipher) {
 					data = data.replace(" ", "+");
 				}
-			}
-			catch (UnsupportedEncodingException e) {
+			} catch (UnsupportedEncodingException e) {
 				// Really?
 			}
 			String candidate = data.substring(0, data.length() - 1);
@@ -184,13 +168,12 @@ public class EncryptionController {
 						try {
 							Hex.decode(candidate);
 							return candidate;
-						}
-						catch (IllegalArgumentException e) {
+						} catch (IllegalArgumentException e) {
 							try {
 								Base64Utils.decode(candidate.getBytes());
 								return candidate;
-							}
-							catch (IllegalArgumentException ex) {
+							} catch (IllegalArgumentException ex) {
+								;
 							}
 						}
 					}
@@ -200,9 +183,7 @@ public class EncryptionController {
 			// User posted data with content type form but meant it to be text/plain
 			data = candidate;
 		}
-
 		return data;
-
 	}
 
 	@ExceptionHandler(KeyFormatException.class)

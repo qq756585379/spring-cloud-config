@@ -16,12 +16,7 @@
 
 package org.springframework.cloud.config.server.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -36,9 +31,6 @@ import org.springframework.cloud.config.environment.PropertySource;
 import org.springframework.cloud.config.server.environment.EnvironmentRepository;
 import org.springframework.util.CollectionUtils;
 
-/**
- * @author Spencer Gibb
- */
 @ConfigurationProperties("spring.cloud.config.server.health")
 public class ConfigServerHealthIndicator extends AbstractHealthIndicator {
 
@@ -65,20 +57,17 @@ public class ConfigServerHealthIndicator extends AbstractHealthIndicator {
 		List<Map<String, Object>> details = new ArrayList<>();
 		for (String name : this.repositories.keySet()) {
 			Repository repository = this.repositories.get(name);
-			String application = (repository.getName() == null) ? name
-					: repository.getName();
+			String application = (repository.getName() == null) ? name : repository.getName();
 			String profiles = repository.getProfiles();
 
 			try {
-				Environment environment = this.environmentRepository.findOne(application,
-						profiles, repository.getLabel(), false);
+				Environment environment = this.environmentRepository.findOne(application, profiles, repository.getLabel(), false);
 
 				HashMap<String, Object> detail = new HashMap<>();
 				detail.put("name", environment.getName());
 				detail.put("label", environment.getLabel());
-				if (environment.getProfiles() != null
-						&& environment.getProfiles().length > 0) {
-					detail.put("profiles", Arrays.asList(environment.getProfiles()));
+				if (environment.getProfiles() != null && environment.getProfiles().length > 0) {
+					detail.put("profiles", Collections.singletonList(environment.getProfiles()));
 				}
 
 				if (!CollectionUtils.isEmpty(environment.getPropertySources())) {
@@ -89,8 +78,7 @@ public class ConfigServerHealthIndicator extends AbstractHealthIndicator {
 					detail.put("sources", sources);
 				}
 				details.add(detail);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.debug("Could not read repository: " + application, e);
 				HashMap<String, String> map = new HashMap<>();
 				map.put("application", application);
@@ -149,7 +137,5 @@ public class ConfigServerHealthIndicator extends AbstractHealthIndicator {
 		public void setLabel(String label) {
 			this.label = label;
 		}
-
 	}
-
 }

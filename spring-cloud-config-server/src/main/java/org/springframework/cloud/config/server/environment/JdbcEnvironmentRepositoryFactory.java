@@ -18,11 +18,7 @@ package org.springframework.cloud.config.server.environment;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * @author Dylan Roberts
- */
-public class JdbcEnvironmentRepositoryFactory implements
-		EnvironmentRepositoryFactory<JdbcEnvironmentRepository, JdbcEnvironmentProperties> {
+public class JdbcEnvironmentRepositoryFactory implements EnvironmentRepositoryFactory<JdbcEnvironmentRepository, JdbcEnvironmentProperties> {
 
 	private JdbcTemplate jdbc;
 
@@ -31,9 +27,7 @@ public class JdbcEnvironmentRepositoryFactory implements
 	}
 
 	@Override
-	public JdbcEnvironmentRepository build(
-			JdbcEnvironmentProperties environmentProperties) {
+	public JdbcEnvironmentRepository build(JdbcEnvironmentProperties environmentProperties) {
 		return new JdbcEnvironmentRepository(this.jdbc, environmentProperties);
 	}
-
 }

@@ -22,11 +22,6 @@ import org.springframework.cloud.config.server.encryption.TextEncryptorLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author Bartosz Wojtkiewicz
- * @author Rafal Zukowski
- *
- */
 @Configuration(proxyBeanMethods = false)
 public class ConfigServerEncryptionConfiguration {
 
@@ -43,5 +38,4 @@ public class ConfigServerEncryptionConfiguration {
 		controller.setDefaultProfile(this.properties.getDefaultProfile());
 		return controller;
 	}
-
 }

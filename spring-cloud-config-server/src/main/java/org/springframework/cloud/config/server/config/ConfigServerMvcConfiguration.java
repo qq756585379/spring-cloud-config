@@ -38,11 +38,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @author Dave Syer
- * @author Roy Clarkson
- * @author Tim Ysewyn
- */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication
 public class ConfigServerMvcConfiguration implements WebMvcConfigurer {
@@ -66,9 +61,8 @@ public class ConfigServerMvcConfiguration implements WebMvcConfigurer {
 	@Bean
 	@RefreshScope
 	public EnvironmentController environmentController(
-			EnvironmentRepository envRepository, ConfigServerProperties server) {
-		EnvironmentController controller = new EnvironmentController(
-				encrypted(envRepository, server), this.objectMapper);
+		EnvironmentRepository envRepository, ConfigServerProperties server) {
+		EnvironmentController controller = new EnvironmentController(encrypted(envRepository, server), this.objectMapper);
 		controller.setStripDocumentFromYaml(server.isStripDocumentFromYaml());
 		controller.setAcceptEmpty(server.isAcceptEmpty());
 		return controller;
@@ -76,21 +70,16 @@ public class ConfigServerMvcConfiguration implements WebMvcConfigurer {
 
 	@Bean
 	@ConditionalOnBean(ResourceRepository.class)
-	public ResourceController resourceController(ResourceRepository repository,
-			EnvironmentRepository envRepository, ConfigServerProperties server) {
-		ResourceController controller = new ResourceController(repository,
-				encrypted(envRepository, server), this.resourceEncryptorMap);
+	public ResourceController resourceController(ResourceRepository repository, EnvironmentRepository envRepository, ConfigServerProperties server) {
+		ResourceController controller = new ResourceController(repository, encrypted(envRepository, server), this.resourceEncryptorMap);
 		controller.setEncryptEnabled(server.getEncrypt().isEnabled());
 		controller.setPlainTextEncryptEnabled(server.getEncrypt().isPlainTextEncrypt());
 		return controller;
 	}
 
-	private EnvironmentRepository encrypted(EnvironmentRepository envRepository,
-			ConfigServerProperties server) {
-		EnvironmentEncryptorEnvironmentRepository encrypted = new EnvironmentEncryptorEnvironmentRepository(
-				envRepository, environmentEncryptor);
+	private EnvironmentRepository encrypted(EnvironmentRepository envRepository, ConfigServerProperties server) {
+		EnvironmentEncryptorEnvironmentRepository encrypted = new EnvironmentEncryptorEnvironmentRepository(envRepository, environmentEncryptor);
 		encrypted.setOverrides(server.getOverrides());
 		return encrypted;
 	}
-
 }

@@ -30,15 +30,6 @@ import org.springframework.cloud.config.server.encryption.TextEncryptorLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Adds configuration to decrypt plain text files served through
- * {@link org.springframework.cloud.config.server.resource.ResourceController}. Each
- * supported extension is added as a key with its associated @{link
- * org.springframework.cloud.config.server.encryption.ResourceEncryptor} implementation as
- * a value.
- *
- * @author Sean Stiglitz
- */
 @Configuration
 @ConditionalOnExpression("${spring.cloud.config.server.encrypt.enabled:true} && ${spring.cloud.config.server.encrypt.plainTextEncrypt:true}")
 @ConditionalOnBean(TextEncryptorLocator.class)
@@ -50,21 +41,15 @@ public class ResourceEncryptorConfiguration {
 	@Bean
 	Map<String, ResourceEncryptor> resourceEncryptors() {
 		Map<String, ResourceEncryptor> resourceEncryptorMap = new HashMap<>();
-		addSupportedExtensionsToMap(resourceEncryptorMap,
-				new CipherResourceJsonEncryptor(encryptor));
-		addSupportedExtensionsToMap(resourceEncryptorMap,
-				new CipherResourcePropertiesEncryptor(encryptor));
-		addSupportedExtensionsToMap(resourceEncryptorMap,
-				new CipherResourceYamlEncryptor(encryptor));
+		addSupportedExtensionsToMap(resourceEncryptorMap, new CipherResourceJsonEncryptor(encryptor));
+		addSupportedExtensionsToMap(resourceEncryptorMap, new CipherResourcePropertiesEncryptor(encryptor));
+		addSupportedExtensionsToMap(resourceEncryptorMap, new CipherResourceYamlEncryptor(encryptor));
 		return resourceEncryptorMap;
 	}
 
-	private void addSupportedExtensionsToMap(
-			Map<String, ResourceEncryptor> resourceEncryptorMap,
-			ResourceEncryptor resourceEncryptor) {
+	private void addSupportedExtensionsToMap(Map<String, ResourceEncryptor> resourceEncryptorMap, ResourceEncryptor resourceEncryptor) {
 		for (String ext : resourceEncryptor.getSupportedExtensions()) {
 			resourceEncryptorMap.put(ext, resourceEncryptor);
 		}
 	}
-
 }

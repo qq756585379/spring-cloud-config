@@ -21,10 +21,6 @@ import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author Dave Syer
- * @author Roy Clarkson
- */
 @ConfigurationProperties("spring.cloud.config.server")
 public class ConfigServerProperties {
 
@@ -178,7 +174,5 @@ public class ConfigServerProperties {
 		public void setPlainTextEncrypt(boolean plainTextEncrypt) {
 			this.plainTextEncrypt = plainTextEncrypt;
 		}
-
 	}
-
 }
